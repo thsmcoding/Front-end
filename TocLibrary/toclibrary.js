@@ -33,12 +33,6 @@ $(document).ready( function() {
 	return counter;
     };
 		   
-      
-    /*** Compares two headings. Headings are HTML elements from h2 to h6
-	 first:  index of the first heading in array that contains all the headings of the document
-	 scd: index of the second heading in array of headings
-	 array_headings:  array that contains all the headings in the body 
-***/
     $.fn.cmpHeadings = function(first, scd, array_headings) {
 	var $first_prop = array_headings[first].prop("tagName");
 	var $scd_prop = array_headings[scd].prop("tagName");
@@ -47,9 +41,6 @@ $(document).ready( function() {
 	return (first_number === scd_number);
     };    
 
-
-    /*** Adds the <li>...</li> element into the HTML code
-     ***/
     $.fn.append_li_item = function(id_name, counter) {
 	var $link = $("<a/>").attr("href", "#" + id_name);
 	var $span = $("<span/>").attr('text', counter)
@@ -58,12 +49,7 @@ $(document).ready( function() {
 	return $li;
 
     };
-    
-    /*** content : DOM element to which we add new item
-	 counter : tag number for the item (e.g 1? 1.2? 2.2.3?)
-	 index: index number in global variable that contains all the HTML headings
-	 Adds the necessary HTML code for a new heading
-    ***/
+
     $.fn.appendItem = function(counter, index, array_headings) {
 	var id_name = array_headings[index].prop("id");
 	var li_to_append = append_li_item(id_name,counter);
