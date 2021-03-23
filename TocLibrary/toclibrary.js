@@ -12,9 +12,18 @@
 	var tocDiv = this;
 	setUpToc(tocDiv);
 	addIdToHeadings(headings);
+	getHeadingNumber(defaults, headings);
 	return this;
     };
 
+    
+    function initCountHeadings(obj_h,allHeaders) {
+	$.each(allHeaders, function(index) {
+	    var one_heading = $(allHeaders[index]);
+	    var tagN = one_heading.prop("tagName").toLowerCase();
+	    obj_h.count_headers[tagN] = 0;
+	});
+    };
     
     /*** Creating the main parent DIV and ul that contains the toc  ***/
     function setUpToc(global_parent) {
@@ -30,11 +39,39 @@
 	$.each(headings, function(index) {
 	    var one_heading = $(headings[index]);
 	    var id_heading = one_heading.text().replace(/ /g, '_');
-	    console.log(id_heading);
 	    one_heading.attr('id', id_heading);
 	});
     }
 
+    /*** Creating the appropriate number for member in TOC ***/
+    function getHeadingNumber(obj_h, headings) {
+	initCountHeadings(obj_h,headings);
+	$.each(headings, function(index) {
+	    var one_heading = $(headings[index]);
+	    var counter = "";
+	    var curr_header = one_heading.prop("tagName").toLowerCase();
+	    console.log("curr_header :"+curr_header);
+	    if(curr_header === "h2") {
+		obj_h.depth += 1;
+		obj_h.count_headers[curr_header] = obj_h.depth;
+		var slice_headers = obj_h.headers.slice(1,obj_h.headers.length);
+		$.each(slice_headers, function(i) {
+		    obj_h.count_headers[i] = 0;
+		});
+		counter= obj_h.depth.toString();
+	    }else {
+		var indx = $.inArray(curr_header.toUpperCase(), obj_h.headers);
+		obj_h.count_headers[curr_header]+=1;
+		var array_values = Object.values($(obj_h.count_headers).slice(0,indx+1));
+		/* !!! COUNTER does not fill in the right way ! ISSUE here */
+		counter = array_values.join(".").toString();
+	    }
+	    console.log("COUNTER :"+counter);
+	    return counter;
+	});
+
+    };
+  
 })( jQuery );
 
 
@@ -58,7 +95,7 @@ $(document).ready( function() {
  
    
     $.fn.getHeadingNumber = function(obj_h, heading){
-	var counter = "";
+    var counter = "";
 	var curr_header = heading.prop("tagName").toLowerCase();
 	if(curr_header === "h2") {
 	    obj_h.depth+= 1;
@@ -75,8 +112,10 @@ $(document).ready( function() {
 	    counter = array_values.join(".");
 	}
 	return counter;
-    };
+   };
 		   
+
+
       
     /*** Compares two headings. Headings are HTML elements from h2 to h6
 	 first:  index of the first heading in array that contains all the headings of the document
@@ -131,9 +170,11 @@ $(document).ready( function() {
     
     $.fn.createToc = function(obj, array_headings,global_parent) {
 	setUpToc(global_parent);
+	
 	$.each(obj.headers, function(index) {
 	    obj.headers[index]=0;
 	});
+	
 	$.each(array_headings, function(index) {
 	    addIdToHeadings(array_headings[index]);
 	    var counter = getHeadingNumber(obj,array_headings[index]);
