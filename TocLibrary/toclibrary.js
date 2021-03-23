@@ -1,3 +1,32 @@
+( function ( $ ) {
+
+    //Plugin definition:
+    $.fn.toccreate = function( options ) {
+	/* default settings*/
+	var defaults = {
+	  	    globalHeadings: { depth: 0,
+			      headers: ['H2','H3','H4','H5','H6'],
+			      count_headers: {}
+				    }    
+	};
+	var settings = $.extend( {}, defaults, options );
+	setUpToc(this);
+	return this;
+    };
+
+    
+    function setUpToc(global_parent) {
+	var divTOC = $('<div />').attr('id', 'toc_list')
+	    .appendTo(global_parent);
+	var ulTOC = $('<ul />').addClass('toc_items')
+	    .appendTo(divTOC);    
+    };    
+	
+})( jQuery );
+
+
+
+/*
 $(document).ready( function() {
     $.fn.setUpToc = function(global_parent) {
 	var divTOC = $('<div/>').attr('id', 'toc_list')
@@ -5,7 +34,7 @@ $(document).ready( function() {
 	    .appendTo(global_parent);
 	var ulTOC = $('<ul/>').addClass('toc_items')
 	    .append('<p>This is toc_items.</p>')
-	    .appendTo(divTOC);
+	    .appendTo(divTOC);    
     };
 
     $.fn.addIdToHeadings = function(heading) {
@@ -39,7 +68,9 @@ $(document).ready( function() {
 	 scd: index of the second heading in array of headings
 	 array_headings:  array that contains all the headings in the body 
 ***/
-    $.fn.cmpHeadings = function(first, scd, array_headings) {
+
+/*
+	$.fn.cmpHeadings = function(first, scd, array_headings) {
 	var $first_prop = array_headings[first].prop("tagName");
 	var $scd_prop = array_headings[scd].prop("tagName");
 	var first_number = parseInt($first_prop.charAt(1));
@@ -50,6 +81,7 @@ $(document).ready( function() {
 
     /*** Adds the <li>...</li> element into the HTML code
      ***/
+/*
     $.fn.append_li_item = function(id_name, counter) {
 	var $link = $("<a/>").attr("href", "#" + id_name);
 	var $span = $("<span/>").attr('text', counter)
@@ -64,7 +96,7 @@ $(document).ready( function() {
 	 index: index number in global variable that contains all the HTML headings
 	 Adds the necessary HTML code for a new heading
     ***/
-    $.fn.appendItem = function(counter, index, array_headings) {
+/*    $.fn.appendItem = function(counter, index, array_headings) {
 	var id_name = array_headings[index].prop("id");
 	var li_to_append = append_li_item(id_name,counter);
 	if(index === 0 ||(index > 0 && cmpHeadings(index, index-1) === 0)) {
@@ -94,22 +126,23 @@ $(document).ready( function() {
 	});
 	
     };
+
+
+
+    
     var $divContent = $("div#content");
     var Obj_headings = { depth: 0,
 			 headers: ['H2','H3','H4', 'H5','H6'],
 			 count_headers: {}
 		       };
+
+
+
+
     $.fn.setUpToc($divContent);
     /*
     var array_headings = $("div#content:headers").toArray();
     createToc(Obj_headings, array_headings, $divContent);
-	*/	   
+   
 });
-
-
-
-
-
-
-
-		
+*/
