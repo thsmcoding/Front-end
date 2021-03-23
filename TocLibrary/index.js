@@ -1,5 +1,7 @@
 $( document ).ready( function () {
-    var elt = $("div#content");
-    elt.toccreate();    
+    var tocDiv = $("div#content-toc");
+    var contentDiv = $("div#content");
+    var headings = $(":header");
+    tocDiv.toccreate(contentDiv, headings);    
 
 });

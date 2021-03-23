@@ -1,27 +1,40 @@
 ( function ( $ ) {
 
     //Plugin definition:
-    $.fn.toccreate = function( options ) {
+    $.fn.toccreate = function(ctDiv, headings, options ) {
 	/* default settings*/
 	var defaults = {
-	  	    globalHeadings: { depth: 0,
-			      headers: ['H2','H3','H4','H5','H6'],
-			      count_headers: {}
-				    }    
+	    depth: 0,
+	    headers : ["H2", "H3", "H4", "H5", "H6"],
+	    count_headers : {}
 	};
-	var settings = $.extend( {}, defaults, options );
-	setUpToc(this);
+	var settings = $.extend(true, {}, defaults, options );
+	var tocDiv = this;
+	setUpToc(tocDiv);
+	addIdToHeadings(headings);
 	return this;
     };
 
     
+    /*** Creating the main parent DIV and ul that contains the toc  ***/
     function setUpToc(global_parent) {
 	var divTOC = $('<div />').attr('id', 'toc_list')
 	    .appendTo(global_parent);
 	var ulTOC = $('<ul />').addClass('toc_items')
 	    .appendTo(divTOC);    
     };    
-	
+
+    
+    /*** Adding an ID to all headings(h2,h3,h4,h5,h6) within the main parent ***/
+    function addIdToHeadings(headings) {
+	$.each(headings, function(index) {
+	    var one_heading = $(headings[index]);
+	    var id_heading = one_heading.text().replace(/ /g, '_');
+	    console.log(id_heading);
+	    one_heading.attr('id', id_heading);
+	});
+    }
+
 })( jQuery );
 
 
@@ -37,11 +50,13 @@ $(document).ready( function() {
 	    .appendTo(divTOC);    
     };
 
+
     $.fn.addIdToHeadings = function(heading) {
 	var id_heading = heading.replace(' ', '_');
 	heading[index].attr('id', id_heading);
     };		   
-    
+ 
+   
     $.fn.getHeadingNumber = function(obj_h, heading){
 	var counter = "";
 	var curr_header = heading.prop("tagName").toLowerCase();
