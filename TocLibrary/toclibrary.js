@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ( function ( $ ) {
 
     //Plugin definition:
@@ -14,6 +13,7 @@
 	setUpToc(tocDiv);
 	addIdToHeadings(headings);
 	getHeadingNumber(defaults, headings);
+	cmpHeadings(0,2, headings);
 	return this;
     };
 
@@ -42,7 +42,8 @@
 	    var id_heading = one_heading.text().replace(/ /g, '_');
 	    one_heading.attr('id', id_heading);
 	});
-    }
+    };
+    
 
     /*** Creating the appropriate number for member in TOC ***/
     function getHeadingNumber(obj_h, headings) {
@@ -67,12 +68,31 @@
 		var items = values_count.slice(0, indx+1);
 		counter = items.join(".").toString();
 	    }
-	    return counter;
+	   // return counter;
 	});
 
     };
-  
+
+    
+    /*** Compares two headings. Returns 0 if they have the same tagname.
+	 Returns -1 if first heading has a tagname "less" weight,
+	 returns 1 otherwise
+	 Headings are HTML elements from h2 to h6
+	 first:  index of the first heading in array that contains all the headings of the document
+	 scd: index of the second heading in array of headings
+	 array_headings:  array that contains all the headings in the body ***/
+    function cmpHeadings(first, scd, array_headings) {
+	var first_prop = $(array_headings[first]).prop("tagName");
+	var scd_prop = $(array_headings[scd]).prop("tagName");
+	var first_number = parseInt(first_prop.charAt(1));
+	var scd_number = parseInt(scd_prop.charAt(1));
+	var res = (first_number === scd_number);
+	console.log("RESULT COMPARE :"+ res);
+    };
+    
 })( jQuery );
+
+
 
 
 
@@ -144,7 +164,7 @@ $(document).ready( function() {
 	 scd: index of the second heading in array of headings
 	 array_headings:  array that contains all the headings in the body 
 ***/
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
 /*
 	$.fn.cmpHeadings = function(first, scd, array_headings) {
@@ -161,7 +181,7 @@ $(document).ready( function() {
 
     /*** Adds the <li>...</li> element into the HTML code
      ***/
-<<<<<<< HEAD
+//<<<<<<< HEAD
 /*
 =======
 >>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
@@ -179,7 +199,7 @@ $(document).ready( function() {
 	 index: index number in global variable that contains all the HTML headings
 	 Adds the necessary HTML code for a new heading
     ***/
-<<<<<<< HEAD
+//<<<<<<< HEAD
 /*    $.fn.appendItem = function(counter, index, array_headings) {
 =======
     $.fn.appendItem = function(counter, index, array_headings) {
@@ -248,9 +268,8 @@ $(document).ready( function() {
    
 });
 */
-=======
-	*/	   
-});
+//=======
+
 
 
 
@@ -259,4 +278,4 @@ $(document).ready( function() {
 
 
 		
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
+//>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
