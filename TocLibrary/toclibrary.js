@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ( function ( $ ) {
 
     //Plugin definition:
@@ -79,6 +80,8 @@
 
 
 /*
+=======
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
 $(document).ready( function() {
     $.fn.setUpToc = function(global_parent) {
 	var divTOC = $('<div/>').attr('id', 'toc_list')
@@ -86,18 +89,30 @@ $(document).ready( function() {
 	    .appendTo(global_parent);
 	var ulTOC = $('<ul/>').addClass('toc_items')
 	    .append('<p>This is toc_items.</p>')
+<<<<<<< HEAD
 	    .appendTo(divTOC);    
     };
 
 
+=======
+	    .appendTo(divTOC);
+    };
+
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
     $.fn.addIdToHeadings = function(heading) {
 	var id_heading = heading.replace(' ', '_');
 	heading[index].attr('id', id_heading);
     };		   
+<<<<<<< HEAD
  
    
     $.fn.getHeadingNumber = function(obj_h, heading){
     var counter = "";
+=======
+    
+    $.fn.getHeadingNumber = function(obj_h, heading){
+	var counter = "";
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
 	var curr_header = heading.prop("tagName").toLowerCase();
 	if(curr_header === "h2") {
 	    obj_h.depth+= 1;
@@ -114,19 +129,28 @@ $(document).ready( function() {
 	    counter = array_values.join(".");
 	}
 	return counter;
+<<<<<<< HEAD
    };
 		   
 
 
+=======
+    };
+		   
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
       
     /*** Compares two headings. Headings are HTML elements from h2 to h6
 	 first:  index of the first heading in array that contains all the headings of the document
 	 scd: index of the second heading in array of headings
 	 array_headings:  array that contains all the headings in the body 
 ***/
+<<<<<<< HEAD
 
 /*
 	$.fn.cmpHeadings = function(first, scd, array_headings) {
+=======
+    $.fn.cmpHeadings = function(first, scd, array_headings) {
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
 	var $first_prop = array_headings[first].prop("tagName");
 	var $scd_prop = array_headings[scd].prop("tagName");
 	var first_number = parseInt($first_prop.charAt(1));
@@ -137,7 +161,10 @@ $(document).ready( function() {
 
     /*** Adds the <li>...</li> element into the HTML code
      ***/
+<<<<<<< HEAD
 /*
+=======
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
     $.fn.append_li_item = function(id_name, counter) {
 	var $link = $("<a/>").attr("href", "#" + id_name);
 	var $span = $("<span/>").attr('text', counter)
@@ -152,7 +179,11 @@ $(document).ready( function() {
 	 index: index number in global variable that contains all the HTML headings
 	 Adds the necessary HTML code for a new heading
     ***/
+<<<<<<< HEAD
 /*    $.fn.appendItem = function(counter, index, array_headings) {
+=======
+    $.fn.appendItem = function(counter, index, array_headings) {
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
 	var id_name = array_headings[index].prop("id");
 	var li_to_append = append_li_item(id_name,counter);
 	if(index === 0 ||(index > 0 && cmpHeadings(index, index-1) === 0)) {
@@ -172,11 +203,17 @@ $(document).ready( function() {
     
     $.fn.createToc = function(obj, array_headings,global_parent) {
 	setUpToc(global_parent);
+<<<<<<< HEAD
 	
 	$.each(obj.headers, function(index) {
 	    obj.headers[index]=0;
 	});
 	
+=======
+	$.each(obj.headers, function(index) {
+	    obj.headers[index]=0;
+	});
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
 	$.each(array_headings, function(index) {
 	    addIdToHeadings(array_headings[index]);
 	    var counter = getHeadingNumber(obj,array_headings[index]);
@@ -184,23 +221,42 @@ $(document).ready( function() {
 	});
 	
     };
+<<<<<<< HEAD
 
 
 
     
+=======
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
     var $divContent = $("div#content");
     var Obj_headings = { depth: 0,
 			 headers: ['H2','H3','H4', 'H5','H6'],
 			 count_headers: {}
 		       };
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
     $.fn.setUpToc($divContent);
     /*
     var array_headings = $("div#content:headers").toArray();
     createToc(Obj_headings, array_headings, $divContent);
+<<<<<<< HEAD
    
 });
 */
+=======
+	*/	   
+});
+
+
+
+
+
+
+
+		
+>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
