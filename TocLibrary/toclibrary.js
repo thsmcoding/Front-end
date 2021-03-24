@@ -63,7 +63,6 @@
 		var indx = $.inArray(curr_header.toUpperCase(), obj_h.headers);
 		obj_h.count_headers[curr_header]+=1;
 		var array_values = Object.values($(obj_h.count_headers).slice(0,indx+1));
-		/* !!! COUNTER does not fill in the right way ! ISSUE here */
 		counter = array_values.join(".").toString();
 	    }
 	    console.log("COUNTER :"+counter);
