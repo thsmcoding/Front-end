@@ -50,28 +50,31 @@
 	    var one_heading = $(headings[index]);
 	    var counter = "";
 	    var curr_header = one_heading.prop("tagName").toLowerCase();
-	    console.log("curr_header :"+curr_header);
 	    if(curr_header === "h2") {
 		obj_h.depth += 1;
 		obj_h.count_headers[curr_header] = obj_h.depth;
 		var slice_headers = obj_h.headers.slice(1,obj_h.headers.length);
 		$.each(slice_headers, function(i) {
-		    obj_h.count_headers[i] = 0;
+		    var key = slice_headers[i].toLowerCase();
+		    obj_h.count_headers[key] = 0;
 		});
 		counter= obj_h.depth.toString();
-	    }else {
+	    } else {
 		var indx = $.inArray(curr_header.toUpperCase(), obj_h.headers);
 		obj_h.count_headers[curr_header]+=1;
-		var array_values = Object.values($(obj_h.count_headers).slice(0,indx+1));
-		counter = array_values.join(".").toString();
+		var values_count = $.map(obj_h.count_headers, function(val, key){return val;});
+		var items = values_count.slice(0, indx+1);
+		counter = items.join(".").toString();
 	    }
-	    console.log("COUNTER :"+counter);
 	    return counter;
 	});
 
     };
   
 })( jQuery );
+
+
+
 
 
 
