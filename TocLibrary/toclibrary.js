@@ -13,7 +13,8 @@
 	setUpToc(tocDiv);
 	addIdToHeadings(headings);
 	getHeadingNumber(defaults, headings);
-	cmpHeadings(0,2, headings);
+	var last = headings.length;
+	cmpHeadings(last-2,last-1,headings);
 	return this;
     };
 
@@ -42,8 +43,7 @@
 	    var id_heading = one_heading.text().replace(/ /g, '_');
 	    one_heading.attr('id', id_heading);
 	});
-    };
-    
+    };    
 
     /*** Creating the appropriate number for member in TOC ***/
     function getHeadingNumber(obj_h, headings) {
@@ -86,18 +86,14 @@
 	var scd_prop = $(array_headings[scd]).prop("tagName");
 	var first_number = parseInt(first_prop.charAt(1));
 	var scd_number = parseInt(scd_prop.charAt(1));
-	var res = (first_number === scd_number);
+	var res = (first_number === scd_number) ? 0 : (first_number < scd_number ? -1 : 1);
+	console.log("FIRST TAG :"+first_prop);
+	console.log("SECOND TAG:"+ scd_prop);
 	console.log("RESULT COMPARE :"+ res);
+
     };
     
 })( jQuery );
-
-
-
-
-
-
-
 
 /*
 =======
