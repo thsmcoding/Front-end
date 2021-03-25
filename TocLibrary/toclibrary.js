@@ -83,12 +83,12 @@
 	 first:  index of the first heading in array that contains all the headings of the document
 	 scd: index of the second heading in array of headings
 	 array_headings:  array that contains all the headings in the body ***/
-    function cmpHeadings(first, scd, array_headings) {
-	var first_prop = $(array_headings[first]).prop("tagName");
-	var scd_prop = $(array_headings[scd]).prop("tagName");
-	var first_number = parseInt(first_prop.charAt(1));
-	var scd_number = parseInt(scd_prop.charAt(1));
-	var res = (first_number === scd_number) ? 0 : (first_number < scd_number ? -1 : 1);
+    function cmpHeadings(current, previous, array_headings) {
+	var current_prop = $(array_headings[current]).prop("tagName");
+	var prev_prop = $(array_headings[previous]).prop("tagName");
+	var current_number = parseInt(current_prop.charAt(1));
+	var prev_number = parseInt(prev_prop.charAt(1));
+	var res = (current_number === prev_number) ? 0 : (current_number < prev_number ? -1 : 1);
 	/*
 	console.log("FIRST TAG :"+first_prop);
 	console.log("SECOND TAG:"+ scd_prop);
@@ -117,9 +117,12 @@
 	}
 	else if (cmpHeadings(index, index-1, array_headings) === -1) {
 	    var current_tagname = $(array_headings[index]).prop("tagName").toLowerCase();
-	    var elt_to_add = current_tagname.last().parent("ul");
-	    elt_to_add.append(li_to_append);
+	    //var elt_to_add = current_tagname.last().parent("ul");
+	    //elt_to_add.append(li_to_append);
+	    $("li").last().append("<ul />");
+	    $("ul").last().append(li_to_append);
 	}
+	// GREATER
 	else {
 	    var prev_tagname = $(array_headings[index-1]);
 	    var whole_elt = $("<ul />").append(li_to_append);
@@ -133,7 +136,6 @@
 	setUpToc(global_parent);
 	addIdToHeadings(array_headings);
 	$.each(obj.headers, function(index) {
-	    ///obj.headers[index] = 0;
 	    var counter = getHeadingNumber(obj, array_headings, index);
 	    appendItem(counter,index, array_headings);
 	});
