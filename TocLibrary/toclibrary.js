@@ -6,17 +6,16 @@
 	var defaults = {
 	    depth: 0,
 	    headers : ["H2", "H3", "H4", "H5", "H6"],
-	    count_headers : {}
+	    count_headers : {},
+	    jqueryObjs: {"h2":$("li.h2"),
+			"h3":$("li.h3"),
+			"h4":$("li.h4"),
+			"h5":$("li.h5"),
+			"h6":$("li.h6"),
+		       }			
 	};
 	var settings = $.extend(true, {}, defaults, options );
 	var tocDiv = this;
-
-	/*setUpToc(tocDiv);
-	addIdToHeadings(headings);
-	getHeadingNumber(defaults, headings);
-	var last = headings.length;
-	cmpHeadings(last-2,last-1,headings);
-	*/
 	createToc(defaults, headings,tocDiv);
 	return this;
     };
@@ -48,9 +47,73 @@
 	});
     };    
 
+    function append_another_child(prev_tagname, li_to_append) {
+	var result ="";
+	switch(prev_tagname) {
+	case "h2":
+	    result = $(".h2").last();
+	    break;
+	case "h3":
+	    result = $(".h3").last();
+	    break;
+
+	case "h4":
+	    result = $(".h4").last();
+	    break;
+
+	case "h5":
+	    result = $(".h5").last();
+	    break;
+
+	case "h6":
+	    result = $(".h6").last();
+	    break;
+
+	default:
+	    break;	    
+	}
+	if( result.has("ul").length ) {
+	    var ulLast = result.find("ul > li").last();
+	    li_to_append.insertAfter(ulLast);
+	}else {
+	    var whole_elt = $("<ul />").append(li_to_append);
+	    result.append(whole_elt);
+	}
+    };
+    
+    function append_after_parent(tagname, li_to_append) {
+	var result ="";
+	switch(tagname) {
+	case "h2":
+	    result = $(".h2").last();
+	    break;
+	case "h3":
+	    result = $(".h3").last();
+	    break;
+
+	case "h4":
+	    result = $(".h4").last();
+	    break;
+
+	case "h5":
+	    result = $(".h5").last();
+	    break;
+
+	case "h6":
+	    result = $(".h6").last();
+	    break;
+
+	default:
+	    break;	    
+
+	}
+	li_to_append.insertAfter(result);
+    }
+
+
+    
     /*** Creating the appropriate number for member in TOC ***/
     function getHeadingNumber(obj_h, headings, current_index) {
-	//initCountHeadings(obj_h,headings);
 	var one_heading = $(headings[current_index]);
 	var counter = "";
 	var curr_header = one_heading.prop("tagName").toLowerCase();
@@ -62,8 +125,7 @@
 	    $.each(slice_headers, function(i) {
 		var key = slice_headers[i].toLowerCase();
 		obj_h.count_headers[key] = 0;
-	    });
-	    
+	    });	    
 	    counter= obj_h.depth.toString();
 	} else {
 	    var indx = $.inArray(curr_header.toUpperCase(), obj_h.headers);
@@ -72,7 +134,7 @@
 	    var items = values_count.slice(0, indx+1);
 	    counter = items.join(".").toString();
 	}
-	console.log("COUNTER:"+counter);
+	//console.log("COUNTER:"+counter);
 	return counter;
     };
      
@@ -89,241 +151,62 @@
 	var current_number = parseInt(current_prop.charAt(1));
 	var prev_number = parseInt(prev_prop.charAt(1));
 	var res = (current_number === prev_number) ? 0 : (current_number < prev_number ? -1 : 1);
-	/*
-	console.log("FIRST TAG :"+first_prop);
-	console.log("SECOND TAG:"+ scd_prop);
-	console.log("RESULT COMPARE :"+ res);
-	*/
+	return res;
     };
     
 
     /*** Add HTML code for one item of the TOC ***/
-    function append_li_item(id_name, counter, title) {
+    function create_li_item(id_name, counter, title,tagname) {
 	var $link = $("<a />").attr("href", "#" + id_name);
 	var $span = $("<span />").text(counter+') ');
 	$link.html($span);
 	$span.after(document.createTextNode(title));
-	var $li = $("<li />");
+	var $li = $("<li />").addClass(tagname);
 	$li.html($link);
 	return $li;
     };
+
+
     
-    function appendItem(counter, index, array_headings) {
+    function appendItem(counter, index, array_headings, settings) {
 	var id_name = $(array_headings[index]).prop("id").toString();
+	var prop_tagname = $(array_headings[index]).prop("tagName").toLowerCase();
 	var title = $(array_headings[index]).text();
-	var li_to_append = append_li_item(id_name, counter, title);	
+	var li_to_append = create_li_item(id_name, counter, title, prop_tagname);
+	var current_tagname = $(array_headings[index]).prop("tagName").toLowerCase();
+	var prev_tagname = (index > 0 ) ?($(array_headings[index-1]).prop("tagName").toLowerCase()) : null; 	
 	if(index === 0 ||(index > 0 && cmpHeadings(index, index-1, array_headings) === 0)) {
-	    $("ul").last().append(li_to_append);
-	}
+	    if (index === 0)
+		$(".toc_items").append(li_to_append);
+	    else {
+		$(".toc_items").find("li").last().append(li_to_append);
+	    }
+	}	
 	else if (cmpHeadings(index, index-1, array_headings) === -1) {
-	    var current_tagname = $(array_headings[index]).prop("tagName").toLowerCase();
-	    //var elt_to_add = current_tagname.last().parent("ul");
-	    //elt_to_add.append(li_to_append);
-	    $("li").last().append("<ul />");
-	    $("ul").last().append(li_to_append);
-	}
-	// GREATER
+	    append_after_parent(current_tagname,li_to_append);
+	}	
 	else {
-	    var prev_tagname = $(array_headings[index-1]);
-	    var whole_elt = $("<ul />").append(li_to_append);
-	    prev_tagname.append(whole_elt);
+	    append_another_child(prev_tagname,li_to_append);    
+	    if ( $(array_headings[index-1]).has("ul").length) {
+		$(array_headings[index-1]).find("ul").find("li").last().append(li_to_append);
+	    }
+	    else {
+		var whole_elt = $("<ul />").append(li_to_append);
+		$(array_headings[index-1]).append(whole_elt);
+	    }
+	    
 	}
     };
+    
 
-
-    /*** Creates the whole TOC ***/
-    function createToc(obj, array_headings, global_parent) {
+   /*** Creates the whole TOC ***/
+    function createToc(obj, array_headings, global_parent,settings) {
 	setUpToc(global_parent);
 	addIdToHeadings(array_headings);
-	$.each(obj.headers, function(index) {
+	$.each(array_headings, function(index) {
 	    var counter = getHeadingNumber(obj, array_headings, index);
-	    appendItem(counter,index, array_headings);
+	    appendItem(counter,index, array_headings, obj.jqueryObjs);
 	});
     };
 
 })( jQuery );
-
-/*
-=======
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-$(document).ready( function() {
-    $.fn.setUpToc = function(global_parent) {
-	var divTOC = $('<div/>').attr('id', 'toc_list')
-	    .append('<p>This is toc_list.</p>')
-	    .appendTo(global_parent);
-	var ulTOC = $('<ul/>').addClass('toc_items')
-	    .append('<p>This is toc_items.</p>')
-<<<<<<< HEAD
-	    .appendTo(divTOC);    
-    };
-
-
-=======
-	    .appendTo(divTOC);
-    };
-
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-    $.fn.addIdToHeadings = function(heading) {
-	var id_heading = heading.replace(' ', '_');
-	heading[index].attr('id', id_heading);
-    };		   
-<<<<<<< HEAD
- 
-   
-    $.fn.getHeadingNumber = function(obj_h, heading){
-    var counter = "";
-=======
-    
-    $.fn.getHeadingNumber = function(obj_h, heading){
-	var counter = "";
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-	var curr_header = heading.prop("tagName").toLowerCase();
-	if(curr_header === "h2") {
-	    obj_h.depth+= 1;
-	    obj_h.count_headers[curr_header] = obj_h.depth;
-	    var slice_headers = obj_h.headers.slice(1,obj_h.headers.length);
-	    $.each(slice_headers, function(i) {
-		obj_h.count_headers[i] = 0;
-	    });
-	    counter= depth.toString();
-	}else {
-	    var indx = $.indexOf(curr_header.toUpperCase(), obj_h.headers);
-	    obj_h.count_headers[curr_header]+=1;
-	    var array_values = Object.values(obj_h.count_headers.slice(0,indx+1));
-	    counter = array_values.join(".");
-	}
-	return counter;
-<<<<<<< HEAD
-   };
-		   
-
-
-=======
-    };
-		   
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-      
-    /*** Compares two headings. Headings are HTML elements from h2 to h6
-	 first:  index of the first heading in array that contains all the headings of the document
-	 scd: index of the second heading in array of headings
-	 array_headings:  array that contains all the headings in the body 
-***/
-//<<<<<<< HEAD
-
-/*
-	$.fn.cmpHeadings = function(first, scd, array_headings) {
-=======
-    $.fn.cmpHeadings = function(first, scd, array_headings) {
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-	var $first_prop = array_headings[first].prop("tagName");
-	var $scd_prop = array_headings[scd].prop("tagName");
-	var first_number = parseInt($first_prop.charAt(1));
-	var scd_number = parseInt($scd_prop.charAt(1));
-	return (first_number === scd_number);
-    };    
-
-
-    /*** Adds the <li>...</li> element into the HTML code
-     ***/
-//<<<<<<< HEAD
-/*
-=======
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-    $.fn.append_li_item = function(id_name, counter) {
-	var $link = $("<a/>").attr("href", "#" + id_name);
-	var $span = $("<span/>").attr('text', counter)
-	    .insertAfter($link);
-	var $li = $("<li/>").append($link);
-	return $li;
-
-    };
-
-
-    
-    /*** content : DOM element to which we add new item
-	 counter : tag number for the item (e.g 1? 1.2? 2.2.3?)
-	 index: index number in global variable that contains all the HTML headings
-	 Adds the necessary HTML code for a new heading
-    ***/
-//<<<<<<< HEAD
-/*    $.fn.appendItem = function(counter, index, array_headings) {
-=======
-    $.fn.appendItem = function(counter, index, array_headings) {
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-	var id_name = array_headings[index].prop("id");
-	var li_to_append = append_li_item(id_name,counter);
-	
-
-	if(index === 0 ||(index > 0 && cmpHeadings(index, index-1) === 0)) {
-	    $("ul").last().after($li_to_append);
-	} else if (cmpHeadings(index, index-1) === -1) {
-	    var current_tagname = array_headings[index].prop("tagName").toLowerCase();
-	    var elt_to_add =current_tagname.last().parent("ul");
-	    elt_to_add.append($li_to_append);
-	}
-	else {
-	    var prev_tagname = array_headings[index-1];
-	    var whole_elt = $("<ul/>").attr('innerHTML',li_to_append);
-	    prev_tagname.append(whole_elt);
-	}
-    };
-
-    
-    $.fn.createToc = function(obj, array_headings,global_parent) {
-	setUpToc(global_parent);
-<<<<<<< HEAD
-	
-	$.each(obj.headers, function(index) {
-	    obj.headers[index]=0;
-	});
-	
-=======
-	$.each(obj.headers, function(index) {
-	    obj.headers[index]=0;
-	});
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-	$.each(array_headings, function(index) {
-	    addIdToHeadings(array_headings[index]);
-	    var counter = getHeadingNumber(obj,array_headings[index]);
-	    appendItem(counter,index,array_headings);
-	});
-	
-    };
-<<<<<<< HEAD
-
-
-
-    
-=======
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-    var $divContent = $("div#content");
-    var Obj_headings = { depth: 0,
-			 headers: ['H2','H3','H4', 'H5','H6'],
-			 count_headers: {}
-		       };
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
-    $.fn.setUpToc($divContent);
-    /*
-    var array_headings = $("div#content:headers").toArray();
-    createToc(Obj_headings, array_headings, $divContent);
-<<<<<<< HEAD
-   
-});
-*/
-//=======
-
-
-
-
-
-
-
-
-		
-//>>>>>>> cb523e0a492ad157ce52f80bb176e157ace5f3b0
