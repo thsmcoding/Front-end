@@ -1,5 +1,5 @@
 ( function ( $ ) {
-
+    var start = performance.now();
     //Plugin definition:
     $.fn.toccreate = function(ctDiv, headings, options ) {
 	/* default settings*/
@@ -17,6 +17,8 @@
 	var settings = $.extend(true, {}, defaults, options );
 	var tocDiv = this;
 	createToc(defaults, headings,tocDiv);
+	var end= performance.now();
+	console.log("Plugin took " + (end-start) + " milliseconds to execute");
 	return this;
     };
 
@@ -56,19 +58,15 @@
 	case "h3":
 	    result = $(".h3").last();
 	    break;
-
 	case "h4":
 	    result = $(".h4").last();
 	    break;
-
 	case "h5":
 	    result = $(".h5").last();
 	    break;
-
 	case "h6":
 	    result = $(".h6").last();
 	    break;
-
 	default:
 	    break;	    
 	}
@@ -134,9 +132,9 @@
 	    var items = values_count.slice(0, indx+1);
 	    counter = items.join(".").toString();
 	}
-	//console.log("COUNTER:"+counter);
 	return counter;
     };
+    
      
     /*** Compares two headings. Returns 0 if they have the same tagname.
 	 Returns -1 if first heading has a tagname "less" weight,
@@ -165,9 +163,7 @@
 	$li.html($link);
 	return $li;
     };
-
-
-    
+   
     function appendItem(counter, index, array_headings, settings) {
 	var id_name = $(array_headings[index]).prop("id").toString();
 	var prop_tagname = $(array_headings[index]).prop("tagName").toLowerCase();
@@ -187,18 +183,17 @@
 	}	
 	else {
 	    append_another_child(prev_tagname,li_to_append);    
-	    if ( $(array_headings[index-1]).has("ul").length) {
-		$(array_headings[index-1]).find("ul").find("li").last().append(li_to_append);
-	    }
-	    else {
-		var whole_elt = $("<ul />").append(li_to_append);
-		$(array_headings[index-1]).append(whole_elt);
-	    }
-	    
-	}
-    };
-    
 
+	    //if ( $(array_headings[index-1]).has("ul").length) {
+	    //$(array_headings[index-1]).find("ul").find("li").last().append(li_to_append);
+	}
+	//else {
+	//	var whole_elt = $("<ul />").append(li_to_append);
+	//	$(array_headings[index-1]).append(whole_elt);
+	//}	    
+    };
+
+    
    /*** Creates the whole TOC ***/
     function createToc(obj, array_headings, global_parent,settings) {
 	setUpToc(global_parent);
