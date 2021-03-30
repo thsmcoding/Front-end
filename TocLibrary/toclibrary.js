@@ -8,20 +8,19 @@
 	    headers : ["H2", "H3", "H4", "H5", "H6"],
 	    count_headers : {},
 	    jqueryObjs: {"h2":$("li.h2"),
-			"h3":$("li.h3"),
-			"h4":$("li.h4"),
-			"h5":$("li.h5"),
-			"h6":$("li.h6"),
-		       }			
+			 "h3":$("li.h3"),
+			 "h4":$("li.h4"),
+			 "h5":$("li.h5"),
+			 "h6":$("li.h6")
+			}			
 	};
 	var settings = $.extend(true, {}, defaults, options );
 	var tocDiv = this;
 	createToc(defaults, headings,tocDiv);
 	var end= performance.now();
-	console.log("Plugin took " + (end-start) + " milliseconds to execute");
-	return this;
+	console.log("Plugin took " + (end-start) + " milliseconds to execute.");
+	return tocDiv;
     };
-
     
     function initCountHeadings(obj_h,allHeaders) {
 	$.each(allHeaders, function(index) {
@@ -35,8 +34,9 @@
     function setUpToc(global_parent) {
 	var divTOC = $('<div />').attr('id', 'toc_list')
 	    .appendTo(global_parent);
-	var ulTOC = $('<ul />').addClass('toc_items')
-	    .appendTo(divTOC);    
+	var $ulTOC = $('<ul />').addClass('toc_items')
+	    .appendTo(divTOC);
+	return $ulTOC;
     };    
 
     
@@ -88,34 +88,26 @@
 	case "h3":
 	    result = $(".h3").last();
 	    break;
-
 	case "h4":
 	    result = $(".h4").last();
 	    break;
-
 	case "h5":
 	    result = $(".h5").last();
 	    break;
-
 	case "h6":
 	    result = $(".h6").last();
 	    break;
-
 	default:
 	    break;	    
-
 	}
 	li_to_append.insertAfter(result);
-    }
-
-
+    };
     
     /*** Creating the appropriate number for member in TOC ***/
     function getHeadingNumber(obj_h, headings, current_index) {
 	var one_heading = $(headings[current_index]);
 	var counter = "";
 	var curr_header = one_heading.prop("tagName").toLowerCase();
-
 	if(curr_header === "h2") {
 	    obj_h.depth += 1;
 	    obj_h.count_headers[curr_header] = obj_h.depth;
@@ -133,8 +125,7 @@
 	    counter = items.join(".").toString();
 	}
 	return counter;
-    };
-    
+    };    
      
     /*** Compares two headings. Returns 0 if they have the same tagname.
 	 Returns -1 if first heading has a tagname "less" weight,
@@ -163,19 +154,22 @@
 	$li.html($link);
 	return $li;
     };
-   
-    function appendItem(counter, index, array_headings, settings) {
+
+    function appendItem(counter, index, array_headings, settings, tocItems) {
 	var id_name = $(array_headings[index]).prop("id").toString();
-	var prop_tagname = $(array_headings[index]).prop("tagName").toLowerCase();
+	var prop_tagname = $(array_headings[index]).prop("tagName")
+	    .toLowerCase();
 	var title = $(array_headings[index]).text();
-	var li_to_append = create_li_item(id_name, counter, title, prop_tagname);
+	var li_to_append = create_li_item(id_name, counter, title,prop_tagname);
 	var current_tagname = $(array_headings[index]).prop("tagName").toLowerCase();
-	var prev_tagname = (index > 0 ) ?($(array_headings[index-1]).prop("tagName").toLowerCase()) : null; 	
+	var prev_tagname = (index>0) ? $(array_headings[index-1]).prop("tagName").toLowerCase() : null; 	
 	if(index === 0 ||(index > 0 && cmpHeadings(index, index-1, array_headings) === 0)) {
 	    if (index === 0)
-		$(".toc_items").append(li_to_append);
+		//$(".toc_items").append(li_to_append);
+		tocItems.append(li_to_append);
 	    else {
-		$(".toc_items").find("li").last().append(li_to_append);
+		//$(".toc_items").find("li").last().append(li_to_append);
+		tocItems.find("li").last().append(li_to_append);
 	    }
 	}	
 	else if (cmpHeadings(index, index-1, array_headings) === -1) {
@@ -183,24 +177,16 @@
 	}	
 	else {
 	    append_another_child(prev_tagname,li_to_append);    
-
-	    //if ( $(array_headings[index-1]).has("ul").length) {
-	    //$(array_headings[index-1]).find("ul").find("li").last().append(li_to_append);
 	}
-	//else {
-	//	var whole_elt = $("<ul />").append(li_to_append);
-	//	$(array_headings[index-1]).append(whole_elt);
-	//}	    
     };
-
     
    /*** Creates the whole TOC ***/
     function createToc(obj, array_headings, global_parent,settings) {
-	setUpToc(global_parent);
+	var $tocItems = setUpToc(global_parent);
 	addIdToHeadings(array_headings);
 	$.each(array_headings, function(index) {
 	    var counter = getHeadingNumber(obj, array_headings, index);
-	    appendItem(counter,index, array_headings, obj.jqueryObjs);
+	    appendItem(counter,index, array_headings, obj.jqueryObjs, $tocItems);
 	});
     };
 

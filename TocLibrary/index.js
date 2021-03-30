@@ -3,5 +3,4 @@ $( document ).ready( function () {
     var contentDiv = $("div#content");
     var headings = $(":header");
     tocDiv.toccreate(contentDiv, headings);    
-
 });
